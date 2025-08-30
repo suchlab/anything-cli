@@ -1,0 +1,24 @@
+[package]
+name = "anything-cli"
+version = "0.1.5"
+edition = "2021"
+
+[[bin]]
+name = "anything-cli"
+path = "src/main.rs"
+
+[lib]
+name = "anything_cli"
+path = "src/lib.rs"
+
+[dependencies]
+clap = { version = "4.4", features = ["derive"] }
+reqwest = { version = "0.11", features = ["blocking", "json"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+directories = "5.0"
+tempfile = "3.8"
+
+[dev-dependencies]
+mockall = "0.12"
+tokio = { version = "1.0", features = ["test-util", "macros"] }
