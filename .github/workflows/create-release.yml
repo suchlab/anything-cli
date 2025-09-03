@@ -1,0 +1,78 @@
+# https://github.com/dirien/rust-cross-compile
+
+name: 2. Create release
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Tag version to build (e.g., v1.0.0)"
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: ${{ matrix.platform.os_name }} with rust ${{ matrix.toolchain }}
+    runs-on: ${{ matrix.platform.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+          - os_name: Linux-x86_64
+            os: ubuntu-20.04
+            target: x86_64-unknown-linux-gnu
+            bin: anything-cli-linux-amd64
+          - os_name: macOS-x86_64
+            os: macOS-latest
+            target: x86_64-apple-darwin
+            bin: anything-cli-darwin-amd64
+          - os_name: macOS-aarch64
+            os: macOS-latest
+            target: aarch64-apple-darwin
+            bin: anything-cli-darwin-arm64
+        toolchain:
+          - stable
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Build binary
+        uses: houseabsolute/actions-rust-cross@v0
+        with:
+          command: "build"
+          target: ${{ matrix.platform.target }}
+          toolchain: ${{ matrix.toolchain }}
+          args: "--release"
+          strip: true
+
+      - name: Rename binary (Linux and macOS)
+        run: mv target/${{ matrix.platform.target }}/release/anything-cli target/${{ matrix.platform.target }}/release/${{ matrix.platform.bin }}
+
+      - name: Set executable permissions
+        run: chmod +x target/${{ matrix.platform.target }}/release/${{ matrix.platform.bin }}
+
+      - name: Compress binary to .tar.gz
+        run: |
+          cd target/${{ matrix.platform.target }}/release
+          tar -czf ${{ matrix.platform.bin }}.tar.gz ${{ matrix.platform.bin }}
+
+      - name: Generate SHA-256 checksum
+        run: |
+          cd target/${{ matrix.platform.target }}/release
+          shasum -a 256 ${{ matrix.platform.bin }}.tar.gz | cut -d ' ' -f 1 > ${{ matrix.platform.bin }}.tar.gz.sha256
+
+      - name: Release install.sh to GitHub
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ github.event.inputs.tag || github.event.release.tag_name }}
+          files: |
+            install/install.sh
+
+      - name: Release binary and checksum to GitHub
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ github.event.inputs.tag || github.event.release.tag_name }}
+          files: |
+            target/${{ matrix.platform.target }}/release/${{ matrix.platform.bin }}.tar.gz
+            target/${{ matrix.platform.target }}/release/${{ matrix.platform.bin }}.tar.gz.sha256
