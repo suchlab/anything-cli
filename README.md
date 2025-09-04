@@ -398,3 +398,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - Built with [Rust](https://rust-lang.org/) and [Clap](https://github.com/clap-rs/clap)
 - HTTP client powered by [reqwest](https://github.com/seanmonstar/reqwest)
 - JSON handling with [serde](https://github.com/serde-rs/serde)
+
+## 👥 People
+- [Iñigo Taibo](https://github.com/itaibo)
