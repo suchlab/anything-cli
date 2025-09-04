@@ -38,7 +38,7 @@ fn get_remote_url() -> Option<String> {
 fn extract_repo_name(remote_url: &str) -> Option<String> {
     remote_url
         .split('/')
-        .last()
+        .next_back()
         .and_then(|part| part.strip_suffix(".git").map(String::from))
 }
 
