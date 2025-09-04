@@ -80,10 +80,3 @@ jobs:
             echo "❌ Binary not found"
             exit 1
           fi
-
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: anything-cli-${{ matrix.target }}
-          path: target/${{ matrix.target }}/release/anything-cli
-          retention-days: 7
