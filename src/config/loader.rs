@@ -1,4 +1,4 @@
-use crate::config::config::Config;
+use crate::config::data::Config;
 use std::{env, fs, path::PathBuf};
 
 pub fn load_config(executable_name: &str) -> (Option<Config>, PathBuf) {

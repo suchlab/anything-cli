@@ -3,8 +3,8 @@ use std::fs;
 use std::io::{self, Write};
 use std::process::Command;
 
-pub fn handle_uninstall(executable_name: &String) {
-    let (_, config_path) = load_config(&executable_name);
+pub fn handle_uninstall(executable_name: &str) {
+    let (_, config_path) = load_config(executable_name);
 
     let exe_path = match std::env::current_exe() {
         Ok(path) => path,
@@ -42,7 +42,7 @@ pub fn handle_uninstall(executable_name: &String) {
     }
 
     // Delete the executable - Checks for permissions
-    if let Err(_) = fs::remove_file(&exe_path) {
+    if fs::remove_file(&exe_path).is_err() {
         println!("Root access required to delete executable. Asking for sudo...");
         let status = Command::new("sudo")
             .arg("rm")

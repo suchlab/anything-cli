@@ -1,4 +1,4 @@
-use crate::config::config::Config;
+use crate::config::data::Config;
 use std::{fs, path::PathBuf};
 
 pub fn save_config(config: &Config, config_path: &PathBuf) -> bool {
@@ -17,7 +17,7 @@ pub fn save_config(config: &Config, config_path: &PathBuf) -> bool {
         }
     }
 
-    match fs::write(&config_path, data) {
+    match fs::write(config_path, data) {
         Ok(_) => true,
         Err(e) => {
             eprintln!("Error writing config file: {}", e);

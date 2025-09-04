@@ -1,9 +1,9 @@
-use crate::config::config::Config;
+use crate::config::data::Config;
 use crate::config::loader::load_config;
 use crate::config::saver::save_config;
 use std::collections::HashMap;
 
-pub fn handle_set_header(executable_name: &String, commands: &[String]) {
+pub fn handle_set_header(executable_name: &str, commands: &[String]) {
     if commands.len() < 2 {
         eprintln!("Usage: {} set-header <KEY> [VALUE]", executable_name);
         std::process::exit(1);
@@ -13,7 +13,7 @@ pub fn handle_set_header(executable_name: &String, commands: &[String]) {
     let value = commands.get(2).cloned();
 
     // Gets config or creates new
-    let (config_option, config_path) = load_config(&executable_name);
+    let (config_option, config_path) = load_config(executable_name);
     let mut config = config_option.unwrap_or_else(|| Config {
         base_url: String::new(),
         headers: Some(HashMap::new()),

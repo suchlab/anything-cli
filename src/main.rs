@@ -1,10 +1,10 @@
 mod cli {
-    pub mod cli;
+    pub mod args;
     pub mod parse;
 }
 
 mod config {
-    pub mod config;
+    pub mod data;
     pub mod loader;
     pub mod saver;
 }
@@ -27,7 +27,7 @@ use clap::Parser;
 use reqwest::blocking::Client;
 use reqwest::header::USER_AGENT;
 
-use crate::cli::cli::Cli;
+use crate::cli::args::Cli;
 use crate::cli::parse::parse_query_params;
 use crate::config::loader::load_config;
 use crate::instructions::process_instructions;
@@ -74,7 +74,7 @@ fn main() {
     }
 
     // Internal commands
-    if let Some(cmd) = filtered_commands.get(0) {
+    if let Some(cmd) = filtered_commands.first() {
         let must_exit = match cmd.as_str() {
             "self:set-header" => {
                 handle_set_header(&executable_name, &filtered_commands);
@@ -171,12 +171,10 @@ fn main() {
         } else {
             println!("{}", text.trim());
         }
+    } else if let Ok(json_val) = serde_json::from_str::<serde_json::Value>(&text) {
+        println!("{}", serde_json::to_string(&json_val).unwrap());
     } else {
-        if let Ok(json_val) = serde_json::from_str::<serde_json::Value>(&text) {
-            println!("{}", serde_json::to_string(&json_val).unwrap());
-        } else {
-            println!("{}", text.trim());
-        }
+        println!("{}", text.trim());
     }
 
     // If HTTP status code was not success, exit with error

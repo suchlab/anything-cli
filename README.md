@@ -272,14 +272,14 @@ test-cli self:uninstall
 src/
 ├── main.rs              # Application entry point and request handling
 ├── cli/
-│   ├── cli.rs           # Command-line interface definition
+│   ├── args.rs          # Command-line interface definition
 │   └── parse.rs         # Parameter and flag parsing logic
 ├── commands/
 │   ├── set_base_url.rs  # Base URL management command
 │   ├── set_header.rs    # Header management command
 │   └── uninstall.rs     # Uninstallation command
 ├── config/
-│   ├── config.rs        # Configuration data structures
+│   ├── data.rs          # Configuration data structures
 │   ├── loader.rs        # Configuration loading logic
 │   └── saver.rs         # Configuration saving logic
 ├── instructions/
