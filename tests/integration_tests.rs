@@ -250,7 +250,7 @@ fn test_cli_startup_performance() {
 
     assert!(output.status.success());
 
-    // CLI should start up within reasonable time (1 second including compilation)
+    // CLI should start up within reasonable time (1 seconds including compilation)
     // This is generous to account for different system speeds and cold compilation
     assert!(
         duration.as_secs() < 1,

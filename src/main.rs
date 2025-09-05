@@ -173,7 +173,9 @@ fn main() {
 
     if let Some(parsed) = parse_anything_schema(&text) {
         if let Some(instructions) = parsed.instructions {
-            process_instructions(&instructions);
+            if let Err(exit_code) = process_instructions(&instructions) {
+                std::process::exit(exit_code);
+            }
         } else {
             println!("{}", text.trim());
         }
